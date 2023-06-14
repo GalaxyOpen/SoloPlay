@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="component/config :: config"></th:block>
+</head>
+<body>
+<div th:replace="component/header :: header"></div>
+<div th:replace="component/nav :: nav"></div>
+<div id="section">
+    <div class="container" id="paging-list">
+        <table class="table-primary">
+            <thead>
+            <tr>
+                <th scope="col">번호</th>
+                <th scope="col">작성자</th>
+                <th scope="col">제목</th>
+                <th scope="col">날짜</th>
+                <th scope="col">조회수</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="board: ${boardList}">
+                <td th:text="${board.id}"></td>
+                <td th:text="${board.boardWriter}"></td>
+                <td><a th:href="@{|/board/${board.id}?page=${boardList.number+1}&type=${type}&q=${q}|}"
+                       th:text="${board.boardTitle}">제목</a></td>
+                <td th:text="${board.createdAt}"></td>
+                <td th:text="${board.boardHits}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="container">
+            <ul class="pagination" justify-content-center>
+                <li class="page-item">
+                    <a class="page-link" th:href="@{/board(page=1, type=${type}, q=${q})}">
+                    <span>첫 페이지</span>
+                    </a>
+                </li>
+                <li th:class="${boardList.first} ? 'dsabled'" class="page-item">
+                    <a class="page-link"
+                       th:href="${boardList.first} ? '#' : @{/board(page=${boardList.number}, tyep=${type}, q=${q})}">
+                        <span><</span>
+                    </a>
+                </li>
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:class="${page == boardList.number+1}?'page-item active'" class="page-item">
+                    <a th:href="@{/board(page=${page}, type=${type}, q=${q})}" class="page-link"
+                       th:text="${page}"></a>
+                </li>
+                <li th:class="${boardList.last}?'disabled'">
+                    <a class="page-link"
+                        th:href="${boardList.last}?'#':@{/board(page=${boardList.number+2}, type=${type}, q=${q})}">
+                        <span>&gt;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" th:href="@{/board(page=${boardList.totalPages}, type=${type}, q=${q})}">
+                        <span>끝 페이지</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div th:unless="${boardList!=null}">
+        <h1>검색결과가 없습니다!!</h1>
+    </div>
+</div>
+<div th:replace="component/footer :: footer"></div>
+</body>
+</html>

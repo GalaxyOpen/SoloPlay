@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="component/config :: config"></th:block>
+</head>
+<body>
+<div th:replace="component/header :: header"></div>
+<div th:replace="component/nav :: nav"></div>
+<div id="section">
+    <table class="table table-primary">
+        <tr>
+            <th>번호</th>
+            <td th:text="${board.id}"></td>
+        </tr>
+        <tr>
+            <th>제목</th>
+            <td th:text="${board.boardTitle}"></td>
+        </tr>
+        <tr>
+            <th>작성자</th>
+            <td th:text="${board.boardWriter}"></td>
+        </tr>
+        <tr>
+            <td>날짜</td>
+            <td th:text="${board.createdAt}"></td>
+        </tr>
+        <tr>
+            <td>조회 수</td>
+            <td th:text="${board.boardContents}"></td>
+        </tr>
+        <tr th:if="${board.fileAttached==1}">
+            <th>사진</th>
+            <td th:each="fileName: ${board.storedFileName}">
+                <img th:src="@{|/upload/${fileName}}" width="200" height="200" alt="">
+            </td>
+        </tr>
+    </table>
+    <div class="container">
+        <button class="btn-outline-primary" onclick="board_List()">목록</button>
+        <button class="btn border-primary" onclick="board_Update(id)">수정</button>
+        <button class="btn btn-danger" onclick="board_Delete(id)">삭제</button>
+    </div>
+    <div id="pass-check">
+    </div>
+    <div class="container" id="comment-write">
+        <input type="text" id="comment-writer" placeholder="작성자">
+        <input type="text" id="comment-contents" placeholder="내용">
+        <button onclick="comment_write()">댓글작성</button>
+    </div>
+    <div class="container" id="comment-list">
+        <div th:if="${commentList == null}">
+            <p>작성된 댓글이 없습니다.</p>
+        </div>
+        <div th:unless="${commentList==null}">
+            <table class="table">
+                <tr>
+                    <th>번호</th>
+                    <th>작성자</th>
+                    <th>내용</th>
+                    <th>날짜</th>
+                </tr>
+                <tr th:each="comment:${commentList}">
+                    <td th:text="${comment.id}"></td>
+                    <td th:text="${comment.commentWriter}"></td>
+                    <td th:text="${comment.commentContents}"></td>
+                    <td th:text="${comment.createdAt}"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div th:replace="component/footer :: footer"></div>
+</body>
+<script th:inline="javascript">
+    const comment_list=(commentList)=>{
+        const resultArea=document.querySelector("#comment-list");
+        let output="<table class=\"table table-primary\">\n" +
+            "    <tr>\n" +
+            "        <th>글 번호</th>\n" +
+            "        <th>제목</th>\n" +
+            "        <th>작성자</th>\n" +
+            "        <th>작성 일자</th>\n" +
+            "        <th>조회 수</th>\n" +
+            "    </tr>"
+        for(let i in commentList) {
+            output += "<tr>\n" +
+                "                    <td>"+commentList[i].id+"</td>\n" +
+                "                    <td>"+commentList[i].commentWriter+"</td>\n" +
+                "                    <td>"+commentList[i].commentContents+"</td>\n" +
+                "                    <td>"+commentList[i].createdAt+"</td>\n" +
+                "                </tr>";
+        }
+        output+= "</table>";
+        resultArea.innerHTML = output;
+    }
+    const comment_write =()=>{
+        const writer = document.querySelector("#comment-writer").value;
+        const contents = document.querySelector("#comment-contents").value;
+        const boardId = [[${board.id}]]
+        axios({
+            method:"post",
+            url:"/comment/save",
+            data: {
+                commentWriter: writer,
+                commentContents: contents,
+                boardId: boardId
+            }
+        }).then(res=>{
+            document.querySelector("#comment-writer").value="";
+            document.querySelector("#comment-contents").value="";
+            comment_list(res.data);
+        }).catch(err=>{
+            console.log("err",err);
+        });
+
+        }
+    const board_List = () =>{
+        const page = [[${page}]];
+        const type = [[${type}]];
+        const  q = [[${q}]]
+        location.href="/board?page="+page+"&type="+type+"&q="+q;
+    }
+    const board_Update = () =>{
+        const id= [[${board.id}]]
+        location.href="/board/update/"+id;
+    }
+    const board_Delete = () =>{
+        const id=[[${board.id}]]
+        axios({
+            method:'delete',
+            url: "/board/delete/"+id
+        }).then(res=>{
+            location.href='/';
+        }).catch(err=>{
+            alert("삭제실패");
+        })
+    }
+
+</script>
+</html>

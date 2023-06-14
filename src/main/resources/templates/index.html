@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="component/config :: config"></th:block>
+</head>
+<body>
+<div th:replace="component/header :: header"></div>
+<div th:replace="component/nav :: nav"></div>
+<h2>index.html</h2>
+<div id="main">
+<a href="/member/save">회원가입</a><br>
+<a href="/board/save">글 작성</a><br>
+<a href="/member/login">로그인</a><br>
+<a href="/">처음으로 돌아가기</a><br>
+</div>
+<div th:replace="component/footer :: footer"></div>
+</body>
+</html>

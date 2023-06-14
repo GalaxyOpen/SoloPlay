@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="nav" id="nav">
+  <h1>Member+Board</h1>
+    <ul>
+        <li>
+            <a href="/">
+                <i class="bi bi-house"></i>
+            </a>
+        </li>
+        <li>
+            <a href="/member/save">회원가입</a>
+        </li>
+        <li>
+            <a href="/board/save">글 작성</a>
+        </li>
+        <li>
+            <a th:href="@{/board(page=1)}">정렬된 목록</a>
+        </li>
+        <li class="login-name" id="login-area">
+        </li>
+    </ul>
+    <a href="/">처음으로 돌아가기</a>
+<script th:inline="javascript">
+    const loginArea = document.getElementById("login-area");
+    const loginEmail= [[${session.loginEmail}]];
+    console.log(loginEmail.length);
+
+    if(loginEmail.length !=0){
+        loginArea.innerHTML = "<a href='/member/myPage' style='color: black;'>"+loginEmail +"님 어서오세요!</a>"+
+            "<a href='/member/logout'>logout</a>";
+    }else{
+        loginArea.innerHTML = "<a href='/member/login'>Login</a>";
+    }
+</script>
+</div>
+</body>
+</html>
