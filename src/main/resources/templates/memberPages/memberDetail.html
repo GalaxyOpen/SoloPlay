@@ -57,14 +57,25 @@
     }
     const member_update=()=>{
         const id=[[${member.id}]]
-        location.href="/member/update/"+id;
+        axios({
+            method:"put",
+            url:"/member/update/"+id,
+            data:{
+                id:id
+            }
+        }).then(res=>{
+            console.log("수정 성공")
+            location.href = "/member/update/"+id
+        }).catch(err=>{
+            alert("실패")
+        })
     }
     const member_delete=()=>{
         const id=[[${member.id}]]
-        location.href="/member/delete"+id;
+        // location.href="/member/delete/"+id;
         axios({
             method:"delete",
-            url: "/board/delete/"+id
+            url: "/member/delete/"+id
         }).then(res=>{
             location.href="/";
         }).catch(err=>{

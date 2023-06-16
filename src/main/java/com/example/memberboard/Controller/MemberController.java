@@ -85,12 +85,22 @@ public class MemberController {
         model.addAttribute("member", memberDTO);
         return "/memberPages/memberDetail";
     }
-    @GetMapping("/member/update")
+    @GetMapping("/member/update/")
     public String updateForm(HttpSession session, Model model){
         String loginEmail=(String)session.getAttribute("loginEmail");
         MemberDTO memberDTO = memberService.findByMemberEmail(loginEmail);
         model.addAttribute("member", memberDTO);
         return "/memberPages/memberUpdate";
+    }
+    @PutMapping("/member/update/{id}")
+    public ResponseEntity update(@RequestBody MemberDTO memberDTO){
+        memberService.update(memberDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @DeleteMapping("/member/delete/{id}")
+    public ResponseEntity delete(@PathVariable Long id){
+        memberService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

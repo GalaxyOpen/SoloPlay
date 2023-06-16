@@ -88,4 +88,12 @@ public class MemberService {
         return MemberDTO.toDTO((memberEntity));
 
     }
+
+    public void update(MemberDTO memberDTO) {
+        MemberEntity memberEntity = MemberEntity.toUpdateEntity(memberDTO);
+        memberRepository.save(memberEntity);
+    }
+    public void delete(Long id){
+        memberRepository.deleteById(id);
+    }
 }
