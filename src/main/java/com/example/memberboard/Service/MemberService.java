@@ -30,7 +30,7 @@ public class MemberService {
             return memberRepository.save(memberEntity).getId();
         }else{
             MemberEntity memberEntity = MemberEntity.toSaveEntityWithFile(memberDTO);
-            MemberEntity savedentity = memberRepository.save(memberEntity);
+            MemberEntity savedEntity = memberRepository.save(memberEntity);
             for(MultipartFile memberProfile: memberDTO.getMemberProfile()){
                 String originalFileName=memberProfile.getOriginalFilename();
                 String storedFileName=System.currentTimeMillis()+"-"+originalFileName;
@@ -38,7 +38,7 @@ public class MemberService {
                 memberProfile.transferTo(new File(savePath));
 
                 MemberProfileEntity memberProfileEntity =
-                        MemberProfileEntity.toSaveMemberProfileEntity(memberEntity, originalFileName, storedFileName);
+                        MemberProfileEntity.toSaveMemberProfileEntity(savedEntity, originalFileName, storedFileName);
                 memberProfileRepository.save(memberProfileEntity);
             }
             return memberEntity.getId();

@@ -35,7 +35,7 @@
         </tr>
         <tr th:if="${member.memberProfile==1}">
             <th>프로필 사진</th>
-            <td th:each="fileName:${member.memberProfileName}">
+            <td th:each="fileName:${member.storedFileName}">
                 <img th:src="@{|/upload/${fileName}}" width="200" height="200">
             </td>
         </tr>
