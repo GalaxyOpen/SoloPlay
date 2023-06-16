@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="component/config :: config"></th:block>
+</head>
+<body>
+<div th:replace="component/header :: header"></div>
+<div th:replace="component/nav :: nav"></div>
+<form action="/member/udpate" method="post">
+    <input type="hidden" name="id" th:value="${member.id}">
+    ID : <input type="text" name="memberEmail" class="form-control" th:value="${member.memberEmail}" readonly>
+    Password : <input type="text" class="form-control" name="memberPassword">
+    이름 : <input type="text" name="memberName" class="form-control" th:value="${member.memberName}">
+    탄생일 : <input type="date" name="memberBirth" class="form-control" th:value="${member.memberMobile}">
+    전화번호 : <input type="text" name="memberMobile" th:value="${member.memberMobile}">
+    <input type="button" class="btn-dark" value="정보수정" onclick="member_update()">
+</form>
+<div th:replace="component/footer :: footer"></div>
+</body>
+<script th:inline="javascript">
+    const member_update=()=>{
+        const passDB = [[${member.memberPassword}]];
+        const password = document.querySelector('input[name="memberPassword"]').value;
+        const id = document.querySelector('input[name="id"]').value;
+        const email = document.querySelector('input[name="memberEmail"]').value;
+        const name = document.querySelector('input[name="memberName"]').value;
+        const birth = document.querySelector('input[name="memberBirth"]').value;
+        const mobile = document.querySelector('input[name="memberMobile"]').value;
+        if(passDB==password){
+            axios({
+                method:"put",
+                url:"/member/list"+id,
+                data: {
+                    id: id,
+                    memberEmail:email,
+                    memberPassword:password,
+                    memberName: name,
+                    memberBirth: birth,
+                    memberMobile: mobile
+                }
+            }).then(res=>{
+                location.href="/member/list"+id;
+            }).catch(err=>{
+                alert("회원 정보 수정 실패")
+            })
+        }else{
+            alert("비밀번호가 일치하지 않습니다.")
+        }
+    }
+</script>
+</html>

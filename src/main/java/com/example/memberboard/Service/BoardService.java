@@ -60,7 +60,7 @@ public class BoardService {
     }
     @Transactional
     public void updateHits(Long id){
-        boardFileRepository.updateHits(id);
+        boardRepository.updateHits(id);
     }
 
     public Page<BoardDTO> paging(Pageable pageable, String type, String q) {

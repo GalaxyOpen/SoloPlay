@@ -1,6 +1,9 @@
 package com.example.memberboard.Config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -13,6 +16,10 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry){
         registry.addResourceHandler(resourcePath)
                 .addResourceLocations(savePath);
+    }
+    @Bean
+    public MultipartResolver multipartResolver(){
+        return new StandardServletMultipartResolver();
     }
 
 //    public void addInterceptors(InterceptorRegistry registry){

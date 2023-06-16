@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="component/config :: config"></th:block>
+</head>
+<body>
+<div th:replace="component/header :: header"></div>
+<div th:replace="component/nav :: nav"></div>
+
+<div id="section">
+    <table class="table table-striped">
+        <tr>
+            <th>가입번호</th>
+            <td th:text="${member.id}"></td>
+        </tr>
+        <tr>
+            <th>아이디(이메일)</th>
+            <td th:text="${member.memberEmail}"></td>
+        </tr>
+        <tr>
+            <th>비밀번호</th>
+            <td th:text="${member.memberPassword}"></td>
+        </tr>
+        <tr>
+            <th>이름</th>
+            <td th:text="${member.memberName}"></td>
+        </tr>
+        <tr>
+            <th>탄생일</th>
+            <td th:text="${member.memberBirth}"></td>
+        </tr>
+        <tr>
+            <th>전화번호</th>
+            <td th:text="${member.memberMobile}"></td>
+        </tr>
+        <tr th:if="${member.memberProfile==1}">
+            <th>프로필 사진</th>
+            <td th:each="fileName:${member.memberProfileName}">
+                <img th:src="@{|/upload/${fileName}}" width="200" height="200">
+            </td>
+        </tr>
+    </table>
+    <div class="container">
+        <button class="btn btn-outline-light" onclick="member_list()">목록</button>
+        <button class="btn btn-warning" onclick="member_update()">수정</button>
+        <button class="btn btn-danger" onclick="member_delete()">삭제</button>
+    </div>
+    <div class="pass-check">
+    </div>
+</div>
+
+<div th:replace="component/footer :: footer"></div>
+</body>
+<script th:inline="javascript">
+    const member_list=()=> {
+        location.href = "/";
+    }
+    const member_update=()=>{
+        const id=[[${member.id}]]
+        location.href="/member/update/"+id;
+    }
+    const member_delete=()=>{
+        const id=[[${member.id}]]
+        location.href="/member/delete"+id;
+        axios({
+            method:"delete",
+            url: "/board/delete/"+id
+        }).then(res=>{
+            location.href="/";
+        }).catch(err=>{
+            alert("삭제실패");
+        })
+    }
+
+</script>
+</html>

@@ -23,4 +23,12 @@ public class MemberProfileEntity {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "memberId")
     private MemberEntity memberEntity;
+
+    public static MemberProfileEntity toSaveMemberProfileEntity(MemberEntity memberEntity,String originalFileName, String storedFileName){
+        MemberProfileEntity memberProfileEntity = new MemberProfileEntity();
+        memberProfileEntity.setMemberEntity(memberEntity);
+        memberProfileEntity.setOriginalFileName(originalFileName);
+        memberProfileEntity.setStoredFileName(storedFileName);
+        return memberProfileEntity;
+    }
 }
