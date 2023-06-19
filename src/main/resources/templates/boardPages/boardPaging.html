@@ -8,6 +8,7 @@
 <div th:replace="component/nav :: nav"></div>
 <div id="section">
     <div class="container" id="paging-list">
+        <div th:if="${boardList !=null}" id="board-list">
         <table class="table-primary">
             <thead>
             <tr>
@@ -30,13 +31,13 @@
             </tbody>
         </table>
         <div class="container">
-            <ul class="pagination" justify-content-center>
+            <ul class="pagination justify-content-center">
                 <li class="page-item">
                     <a class="page-link" th:href="@{/board(page=1, type=${type}, q=${q})}">
                     <span>첫 페이지</span>
                     </a>
                 </li>
-                <li th:class="${boardList.first} ? 'dsabled'" class="page-item">
+                <li th:class="${boardList.first} ? 'disabled'" class="page-item">
                     <a class="page-link"
                        th:href="${boardList.first} ? '#' : @{/board(page=${boardList.number}, tyep=${type}, q=${q})}">
                         <span><</span>
@@ -64,6 +65,7 @@
     <div th:unless="${boardList!=null}">
         <h1>검색결과가 없습니다!!</h1>
     </div>
+  </div>
 </div>
 <div th:replace="component/footer :: footer"></div>
 </body>

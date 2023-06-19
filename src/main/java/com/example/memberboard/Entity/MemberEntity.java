@@ -17,20 +17,25 @@ public class MemberEntity extends TimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+
+    @Column(length=30, unique = true)
     private String memberEmail;
-    @Column
+
+    @Column(length = 20)
     private String memberPassword;
-    @Column
+
+    @Column(length = 20)
     private String memberName;
-    @Column
+
+    @Column(length = 13)
     private String memberMobile;
+
     @Column
     private String memberBirth;
+
     @Column
     private String memberProfile;
-//    @Column
-//    private String createdAt;
+
     @Column
     private int fileAttached;
 
@@ -59,6 +64,7 @@ public class MemberEntity extends TimeEntity {
         memberEntity.setMemberName(memberDTO.getMemberName());
         memberEntity.setMemberBirth(memberDTO.getMemberBirth());
         memberEntity.setMemberMobile(memberDTO.getMemberMobile());
+        memberEntity.setFileAttached(0);
         return memberEntity;
     }
     public static MemberEntity toSaveEntityWithFile(MemberDTO memberDTO){

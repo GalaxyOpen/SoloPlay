@@ -36,7 +36,7 @@ public class MemberController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
-    @GetMapping("/member/list")
+    @GetMapping("/member/")
     public String findAll(Model model){
         List<MemberDTO> memberDTOList = memberService.findAll();
         model.addAttribute("memberList", memberDTOList);
@@ -92,7 +92,7 @@ public class MemberController {
         model.addAttribute("member", memberDTO);
         return "/memberPages/memberUpdate";
     }
-    @PutMapping("/member/update/{id}")
+    @PutMapping("/member/{id}")
     public ResponseEntity update(@RequestBody MemberDTO memberDTO){
         memberService.update(memberDTO);
         return new ResponseEntity<>(HttpStatus.OK);

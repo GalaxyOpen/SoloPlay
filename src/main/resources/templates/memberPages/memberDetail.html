@@ -59,13 +59,13 @@
         const id=[[${member.id}]]
         axios({
             method:"put",
-            url:"/member/update/"+id,
+            url:"/member/"+id,
             data:{
                 id:id
             }
         }).then(res=>{
             console.log("수정 성공")
-            location.href = "/member/update/"+id
+            location.href = "/member/"
         }).catch(err=>{
             alert("실패")
         })
