@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <th:block th:replace="component/config :: config"></th:block>
+</head>
+<body>
+<div th:replace="component/header :: header"></div>
+<div th:replace="component/nav :: nav"></div>
+
+<div class="container">
+  <div class="col-6">
+    <label><b>채팅방</b></label>
+  </div>
+  <div>
+    <div id="msgArea" class="col"></div>
+    <div class="col-6">
+      <input type="text" id="msg" class="form-control" arai-label="Recipient's username" aria-describedby="button-addon2">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div th:replace="component/footer :: footer"></div>
+</body>
+<script th:inline="javascript">
+  $(document).ready(function(){
+    const username=[[${#authenication.principal.username}]];
+
+    $("#disconn").on("click", (e)=>{
+      disconnect();
+    })
+    $("#button-send").on("click", (e)=>{
+      send();
+    });
+    let websocket = new WebSocket("ws://localhost:8086/ws/chat");
+
+    websocket.onmessage = onMessage;
+    websocket.onopen = onOpen;
+    websocket.onclose = onClose;
+
+    function send(){
+      let msg=document.getElementById("msg");
+      console.log(username + ":"+msg.value);
+      websocket.send(username +":"+msg.value);
+      msg.value='';
+    }
+    // 채팅창에서 나갔을 때
+    function onClose(evt){
+      const str = username + ": 님이 방을 나가셨습니다.";
+      websocket.send(str);
+    }
+
+    // 채팅창에 들어왔을 때
+    function  onOpen(evt){
+      const str = username+": 님이 입장하셨습니다.";
+      websocket.send(str);
+    }
+    function onMessage(msg){
+      let data = msg.data;
+      let sessionId=null;
+
+      // 데이터를 보낸 사람
+      let message = null;
+      let arr = data.split(":");
+
+      for(let i=0; i<arr.length; i++){
+        console.log('arr['+ i+ ']:')+ arr[i];
+      }
+      const cur_session = username;
+      // 현재 세션에 로그인한 사람
+      console.log("cur_session :" + cur_session);
+      sessionId = arr[0];
+      message = arr[1];
+
+      console.log("sessionID:"+sessionId);
+      console.log("cut_session:"+cur_session);
+
+      // 로그인 한 클리어은트와 타 클라이언트를 분류하기 위함
+      if(sessionId == cur_session){
+        let str= "<div id='col-6'>";
+        str += "<div id='alert alert-secondary'>";
+        str += "<b>"+sessionId+":"+message+"</b>";
+        str += "</div></div>";
+        $("#msgArea").append(str);
+      }else{
+        let str = "<div class='col-6'>";
+        str += "<div class='alert alert-warning'>";
+        str += "<b>"+sessionId+":"+message+"</b>";
+        str += "</div></div>";
+        $("#msgArea").append(str);
+      }
+    }
+  })
+</script>
+</html>
