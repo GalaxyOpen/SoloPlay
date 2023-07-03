@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StompChatController {
 
-    private final SimpMessagingTemplate template;
+    private final SimpMessagingTemplate template; // 특정 Broker로 메세지를 전달
     private final ChatRepository chatRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatService chatService;
@@ -27,7 +27,7 @@ public class StompChatController {
     // stompConfig 에서 설정한 applicationDestinationPrefixes @MessageMapping 경로가 병합됨.
     // "/pub/chat/enter"
 
-    @MessageMapping(value="/chat/enter")
+    @MessageMapping("/chat/enter")
     public void enter(ChatMessageDetailDTO message){
         // setting 전 글쓴이
         String enterMember = message.getWriter();
@@ -60,7 +60,7 @@ public class StompChatController {
     }
 
     // 메시지를 보냄
-    @MessageMapping(value="/chat/message")
+    @MessageMapping("/chat/message")
     public void message(ChatMessageDetailDTO message){
         template.convertAndSend("/sub/chat/room/"+message.getRoomId(), message);
 

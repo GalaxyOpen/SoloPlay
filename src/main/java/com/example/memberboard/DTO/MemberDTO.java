@@ -1,14 +1,11 @@
 package com.example.memberboard.DTO;
 
 import com.example.memberboard.Entity.MemberEntity;
-import com.example.memberboard.Entity.MemberProfileEntity;
 import com.example.memberboard.UtilClass.UtilClass;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
