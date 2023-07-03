@@ -103,4 +103,12 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+//    @GetMapping("/member/chat")
+//    public String testChat(){
+//        return "/chat";
+//    }
+//
+//    @GetMapping("/member/room")
+//    public String testRoom(){return "/room";}
+
 }

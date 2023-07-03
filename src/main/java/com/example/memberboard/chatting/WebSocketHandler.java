@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 @Log4j2
-public class ChatHandler extends TextWebSocketHandler {
+public class WebSocketHandler extends TextWebSocketHandler {
 
     private static List<WebSocketSession> list = new ArrayList<>();
 
