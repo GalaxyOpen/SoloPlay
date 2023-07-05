@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<style>
+
+</style>
+<body>
+<div class='container' ng-cloak ng-app="chatApp">
+  <h1>Swanky Chatbox UI With Angular</h1>
+  <div class='chatbox' ng-controller="MessageCtrl as chatMessage">
+    <div class='chatbox__user-list'>
+      <h1>User list</h1>
+      <div class='chatbox__user--active'>
+        <p>Jack Thomson</p>
+      </div>
+      <div class='chatbox__user--busy'>
+        <p>Angelina Jolie</p>
+      </div>
+      <div class='chatbox__user--active'>
+        <p>George Clooney</p>
+      </div>
+      <div class='chatbox__user--active'>
+        <p>Seth Rogen</p>
+      </div>
+      <div class='chatbox__user--away'>
+        <p>John Lydon</p>
+      </div>
+    </div>
+    <div class="chatbox__messages" ng-repeat="message in messages">
+      <div class="chatbox__messages__user-message">
+        <div class="chatbox__messages__user-message--ind-message">
+          <p class="name">{{message.Name}}</p>
+          <br/>
+          <p class="message">{{message.Message}}</p>
+        </div>
+      </div>
+    </div>
+    <form>
+      <input type="text" placeholder="Enter your message">
+    </form>
+  </div>
+</div>
+</body>
+<script>
+  // chat.js
+
+  // WebSocket connection
+  const socket = new WebSocket("ws://localhost:8088/chat");
+
+  // Event listener for WebSocket connection
+  socket.onopen = function() {
+    console.log("WebSocket connection established.");
+  };
+
+  // Event listener for WebSocket errors
+  socket.onerror = function(error) {
+    console.error("WebSocket error: ", error);
+  };
+
+  // Event listener for WebSocket messages
+  socket.onmessage = function(event) {
+    const message = JSON.parse(event.data);
+    // Handle received message
+    handleMessage(message);
+  };
+
+  // Function to send a chat message
+  function sendMessage(roomId, writer, message) {
+    const chatMessage = {
+      roomId: roomId,
+      writer: writer,
+      message: message
+    };
+    socket.send(JSON.stringify(chatMessage));
+  }
+
+  // Function to handle received chat message
+  function handleMessage(message) {
+    // Display the received chat message in the UI
+    const chatLogs = document.getElementById("chat-logs");
+    const chatMessage = document.createElement("div");
+    chatMessage.classList.add("chat-message");
+    chatMessage.innerHTML = "<strong>" + message.writer + ":</strong> " + message.message;
+    chatLogs.appendChild(chatMessage);
+    // Scroll to the bottom of the chat logs
+    chatLogs.scrollTop = chatLogs.scrollHeight;
+  }
+
+  // Example usage
+  let roomId = "your-room-id";
+  let writer = "John";
+  let message = "Hello, chat!";
+  sendMessage(roomId, writer, message);
+
+</script>
+</html>

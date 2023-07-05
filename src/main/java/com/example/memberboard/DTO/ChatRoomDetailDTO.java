@@ -17,13 +17,11 @@ public class ChatRoomDetailDTO {
 
     public static ChatRoomDetailDTO toChatRoomDetailDTO(ChatRoomEntity chatRoomEntity) {
         ChatRoomDetailDTO chatRoomDetailDTO = new ChatRoomDetailDTO();
-
         chatRoomDetailDTO.setChatRoomId(chatRoomEntity.getId());
         chatRoomDetailDTO.setChatMentor(chatRoomEntity.getChatMentor());
         chatRoomDetailDTO.setRoomId(chatRoomEntity.getRoomId());
         chatRoomDetailDTO.setName(chatRoomEntity.getRoomName());
         chatRoomDetailDTO.setPassword(chatRoomEntity.getRoomPassword());
-
         return chatRoomDetailDTO;
     }
 }
