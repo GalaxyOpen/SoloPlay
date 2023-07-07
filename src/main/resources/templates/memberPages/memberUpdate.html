@@ -19,35 +19,4 @@
 </form>
 <div th:replace="component/footer :: footer"></div>
 </body>
-<!--<script th:inline="javascript">-->
-<!--    const member_update=()=>{-->
-<!--        const passDB = [[${member.memberPassword}]];-->
-<!--        const password = document.querySelector('input[name="memberPassword"]').value;-->
-<!--        const id = document.querySelector('input[name="id"]').value;-->
-<!--        const email = document.querySelector('input[name="memberEmail"]').value;-->
-<!--        const name = document.querySelector('input[name="memberName"]').value;-->
-<!--        const birth = document.querySelector('input[name="memberBirth"]').value;-->
-<!--        const mobile = document.querySelector('input[name="memberMobile"]').value;-->
-<!--        if(passDB==password){-->
-<!--            axios({-->
-<!--                method:"put",-->
-<!--                url:"/member/update/"+id,-->
-<!--                data: {-->
-<!--                    id: id,-->
-<!--                    memberEmail:email,-->
-<!--                    memberPassword:password,-->
-<!--                    memberName: name,-->
-<!--                    memberBirth: birth,-->
-<!--                    memberMobile: mobile-->
-<!--                }-->
-<!--            }).then(res=>{-->
-<!--                location.href="/member/"+id;-->
-<!--            }).catch(err=>{-->
-<!--                alert("회원 정보 수정 실패")-->
-<!--            })-->
-<!--        }else{-->
-<!--            alert("비밀번호가 일치하지 않습니다.")-->
-<!--        }-->
-<!--    }-->
-<!--</script>-->
 </html>

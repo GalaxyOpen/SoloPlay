@@ -14,12 +14,14 @@ import java.time.LocalDateTime;
 @Setter
 @EntityListeners(AutoCloseable.class)
 @MappedSuperclass
-public class TimeEntity {
+public class BaseEntity {
     @CreationTimestamp
-    @Column(updatable=false)
+    @Column(updatable=false, nullable = false)
     private LocalDateTime createdAt;
+    // 작성일
 
     @UpdateTimestamp
     @Column(insertable = false)
     private LocalDateTime updatedAt;
+    // 수정일
 }
