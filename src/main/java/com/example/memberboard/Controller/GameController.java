@@ -96,4 +96,10 @@ public class GameController {
         gameService.update(gameDTO);
         return "redirect:/game";
     }
+
+    @GetMapping("/game/delete/{id}")
+    public String delete(@PathVariable Long id){
+        gameService.delete(id);
+        return "redirect:/game";
+    }
 }
