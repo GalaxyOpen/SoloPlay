@@ -2,15 +2,18 @@ package com.example.memberboard.Service;
 
 import com.example.memberboard.DTO.MemberDTO;
 import com.example.memberboard.Entity.MemberEntity;
-import com.example.memberboard.Entity.MemberProfileEntity;
 import com.example.memberboard.Repository.MemberProfileRepository;
 import com.example.memberboard.Repository.MemberRepository;
+import com.example.memberboard.UtilClass.UtilClass;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -23,44 +26,39 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final MemberProfileRepository memberProfileRepository;
     public Long save(MemberDTO memberDTO) throws IOException {
-        if(memberDTO.getMemberProfile()==null||memberDTO.getMemberProfile().get(0).isEmpty()){
             MemberEntity memberEntity = MemberEntity.toSaveEntity(memberDTO);
             return memberRepository.save(memberEntity).getId();
-        }else{
-            MemberEntity memberEntity = MemberEntity.toSaveEntityWithFile(memberDTO);
-            MemberEntity savedEntity = memberRepository.save(memberEntity);
-            for(MultipartFile memberProfile: memberDTO.getMemberProfile()){
-                String originalFileName=memberProfile.getOriginalFilename();
-                String storedFileName=System.currentTimeMillis()+"-"+originalFileName;
-                String savePath = "D:\\springboot_img\\"+storedFileName;
-                memberProfile.transferTo(new File(savePath));
-
-                MemberProfileEntity memberProfileEntity =
-                        MemberProfileEntity.toSaveMemberProfileEntity(savedEntity, originalFileName, storedFileName);
-                memberProfileRepository.save(memberProfileEntity);
-            }
-            return memberEntity.getId();
-        }
     }
 
-    public boolean emailCheck(String memberEmail) {
-        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(memberEmail);
+    public boolean emailCheck(String memberId) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberId(memberId);
         if(optionalMemberEntity.isEmpty()){
             return true;
         }else{
             return false;
         }
     }
-
-    public List<MemberDTO> findAll() {
-        List<MemberEntity> memberEntityList = memberRepository.findAll();
-        List<MemberDTO> memberDTOList = new ArrayList<>();
-        for(MemberEntity memberEntity : memberEntityList){
-            memberDTOList.add(MemberDTO.toDTO(memberEntity));
+    @Transactional
+    public Page<MemberDTO> paging(Pageable pageable, String type, String q) {
+        int page = pageable.getPageNumber()-1;
+        int pageLimit = 10;
+        Page<MemberEntity> memberEntities = null;
+        if(type.equals("memberId")){
+            memberEntities=memberRepository.findByMemberIdContaining(q, PageRequest.of(page,pageLimit, Sort.by(Sort.Direction.DESC,"id")));
+        }else if(type.equals("memberName")){
+            memberEntities=memberRepository.findByMemberNameContaining(q,PageRequest.of(page,pageLimit, Sort.by(Sort.Direction.DESC,"id")));
+        }else{
+            memberEntities=memberRepository.findAll(PageRequest.of(page,pageLimit,Sort.by(Sort.Direction.DESC,"id")));
         }
-        return memberDTOList;
+        Page<MemberDTO> memberDTOS = memberEntities.map(memberEntity -> MemberDTO.builder()
+                .id(memberEntity.getId())
+                .memberId(memberEntity.getMemberId())
+                .memberName(memberEntity.getMemberName())
+                .memberMobile(memberEntity.getMemberMobile())
+                .createdAt(UtilClass.dateFormat(memberEntity.getCreatedAt()))
+                .build());
+        return memberDTOS;
     }
 
     public boolean login(MemberDTO memberDTO) {
@@ -80,13 +78,14 @@ public class MemberService {
 
     public MemberDTO findById(Long id) {
         MemberEntity memberEntity = memberRepository.findById(id).orElseThrow(()->new NoSuchElementException());
+        System.out.println("memberEntity = " + memberEntity);
         return MemberDTO.toDTO(memberEntity);
     }
 
-    public MemberDTO findByMemberEmail(String loginEmail) {
-        MemberEntity memberEntity = memberRepository.findByMemberEmail(loginEmail).orElseThrow(()->new NoSuchElementException("something wrong"));
-        return MemberDTO.toDTO((memberEntity));
-
+    public MemberDTO findByMemberId(String loginId) {
+        Optional<MemberEntity> memberEntityOptional = memberRepository.findByMemberId(loginId);
+        MemberEntity memberEntity = memberEntityOptional.orElseThrow(() -> new NoSuchElementException());
+        return MemberDTO.toDTO(memberEntity);
     }
 
     public void update(MemberDTO memberDTO) {

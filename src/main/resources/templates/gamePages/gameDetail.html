@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
 <div id="section">
@@ -57,8 +57,10 @@
     <div id="pass-check">
     </div>
     <div class="container" id="review-write">
-        <input type="text" id="review-writer" placeholder="작성자">
-        <input type="text" id="review-contents" placeholder="내용">
+
+        <input type="hidden" name="id">
+        <input type="hidden" name="reviewWriter" id="review-writer" th:value="${member.memberId}">
+        <input type="text" name="reviewContents" id="review-contents" placeholder="내용">
         <button onclick="review_write()">리뷰작성</button>
     </div>
     <div class="container" id="review-list">
@@ -68,7 +70,7 @@
         <div th:unless="${gameReviewList==null}">
             <table class="table">
                 <tr>
-                    <th>리뷰번호</th>
+                    <th>작성번호</th>
                     <th>작성자</th>
                     <th>리뷰내용</th>
                     <th>작성날짜</th>
@@ -90,10 +92,10 @@
         const resultArea=document.querySelector("#review-list");
         let output="<table class=\"table table-primary\">\n" +
             "    <tr>\n" +
-            "        <th>글 번호</th>\n" +
-            "        <th>제목</th>\n" +
+            "        <th>작성번호</th>\n" +
             "        <th>작성자</th>\n" +
-            "        <th>작성 일자</th>\n" +
+            "        <th>리뷰내용</th>\n" +
+            "        <th>작성날짜</th>\n" +
             "    </tr>"
         for(let i in gameReviewList) {
             output += "<tr>\n" +
@@ -109,7 +111,7 @@
     const review_write =()=>{
         const writer = document.querySelector("#review-writer").value;
         const contents = document.querySelector("#review-contents").value;
-        const gameId = [[${game.id}]]
+        const gameId = [[${game.id}]];
         axios({
             method:"post",
             url:"/review/save",
@@ -125,8 +127,7 @@
         }).catch(err=>{
             console.log("err",err);
         });
-
-        }
+     }
     const game_List = () =>{
         const page = [[${page}]];
         const type = [[${type}]];

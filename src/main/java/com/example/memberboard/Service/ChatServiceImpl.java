@@ -42,7 +42,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void createChatRoomDTO(String name, int password, String chatMentor){
         ChatRoomDTO room = ChatRoomDTO.create(name);
-        ChatRoomEntity chatRoomEntity = ChatRoomEntity.toChatRoomEntity(room.getName(),password, room.getRoomId(), chatMentor);
+        ChatRoomEntity chatRoomEntity = ChatRoomEntity.toChatRoomEntity(room.getName(),room.getRoomId());
         chatRoomRepository.save(chatRoomEntity);
     }
     // 채팅방 지우기

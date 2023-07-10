@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:replace="component/config :: config"></th:block>
+
 </head>
 <body>
-<div th:replace="component/header :: header"></div>
-<div th:replace="component/nav :: nav"></div>
+<div th:replace="/component/header :: header"></div>
+
 <form action="/member/save" method="post" enctype="multipart/form-data">
     <input type="hidden" name="id">
     ID<input type="text" name="memberEmail" placeholder="이메일" id="member-email" class="form-control" onblur="email_check()"><br>

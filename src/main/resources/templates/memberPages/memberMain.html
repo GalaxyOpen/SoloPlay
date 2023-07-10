@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:replace="component/config :: config"></th:block>
+
 </head>
 <body>
-<div th:replace="component/header :: header"></div>
-<div th:replace="component/nav :: nav"></div>
+<div th:replace="/component/header :: header"></div>
+
 <div id="section">
     <p th:text="${session.loginEmail}">님 어서오세요</p>
     <button onclick="member_update()">회원 정보 수정</button>

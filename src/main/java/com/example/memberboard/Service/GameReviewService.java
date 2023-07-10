@@ -3,8 +3,10 @@ package com.example.memberboard.Service;
 import com.example.memberboard.DTO.GameReviewDTO;
 import com.example.memberboard.Entity.GameEntity;
 import com.example.memberboard.Entity.GameReviewEntity;
+import com.example.memberboard.Entity.MemberEntity;
 import com.example.memberboard.Repository.GameRepository;
 import com.example.memberboard.Repository.GameReviewRepository;
+import com.example.memberboard.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,4 +39,8 @@ public class GameReviewService {
     }
 
 
+    public GameReviewDTO findById(Long id) {
+        GameReviewEntity gameReviewEntity = gameReviewRepository.findById(id).orElseThrow(()->new NoSuchElementException());
+        return GameReviewDTO.toDTO(gameReviewEntity);
+    }
 }

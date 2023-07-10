@@ -14,30 +14,29 @@ import java.util.List;
 public class ChatRoomEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(nullable = false)
     private Long id;
 
-    @Column
-    private String roomId;
-
-    @Column
+    @Column(length=100, nullable = false)
     private String roomName;
 
-    @Column
-    private int roomPassword;
+    @Column(length = 20, nullable = false)
+    private String roomReceiver;
 
-    @Column
-    private String chatMentor; //
+    @Column(length = 20, nullable = false)
+    private String roomId;
+
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="member_id")
+    private MemberEntity memberEntity;
 
     @OneToMany(mappedBy = "chatRoomEntity", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessageEntity> chatMessageEntityList = new ArrayList<>();
 
-    public static ChatRoomEntity toChatRoomEntity(String roomName, int roomPassword, String roomId, String chatMentor){
+    public static ChatRoomEntity toChatRoomEntity(String roomName,String roomId){
         ChatRoomEntity chatRoomEntity = new ChatRoomEntity();
         chatRoomEntity.setRoomName(roomName);
-        chatRoomEntity.setRoomPassword(roomPassword);
         chatRoomEntity.setRoomId(roomId);
-        chatRoomEntity.setChatMentor(chatMentor);
         return chatRoomEntity;
     }
 }

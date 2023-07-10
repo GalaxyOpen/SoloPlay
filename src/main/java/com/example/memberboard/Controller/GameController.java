@@ -2,8 +2,10 @@ package com.example.memberboard.Controller;
 
 import com.example.memberboard.DTO.GameDTO;
 import com.example.memberboard.DTO.GameReviewDTO;
+import com.example.memberboard.DTO.MemberDTO;
 import com.example.memberboard.Service.GameReviewService;
 import com.example.memberboard.Service.GameService;
+import com.example.memberboard.Service.MemberService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -24,6 +26,7 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class GameController {
     private final GameService gameService;
+    private final MemberService memberService;
     private final GameReviewService gameReviewService;
 
     @GetMapping("/game/save")
@@ -67,9 +70,16 @@ public class GameController {
         model.addAttribute("page",page);
         model.addAttribute("type",type);
         model.addAttribute("q",q);
-        try{
+
             GameDTO gameDTO = gameService.findById(id);
+            MemberDTO memberDTO = memberService.findById(id);
+            GameReviewDTO gameReviewDTO = gameReviewService.findById(id);
+
             model.addAttribute("game", gameDTO);
+            model.addAttribute("member", memberDTO);
+            model.addAttribute("gameReview", gameReviewDTO);
+
+        System.out.println("gameReviewDTO = " + gameReviewDTO);
             List<GameReviewDTO> gameReviewDTOList = gameReviewService.findAll(id);
             if(gameReviewDTOList.size() > 0) {
                 model.addAttribute("gameReviewList", gameReviewDTOList);
@@ -77,9 +87,7 @@ public class GameController {
                 model.addAttribute("gameReviewList", null);
             }
             return "/gamePages/gameDetail";
-        }catch(NoSuchElementException e){
-            return "/gamepages/gameNotFound";
-        }
+
     }
 
     @Transactional

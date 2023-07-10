@@ -21,6 +21,7 @@ public class GameReviewController {
         try{
             gameReviewService.save(gameReviewDTO);
             List<GameReviewDTO> gameReviewDTOList = gameReviewService.findAll(gameReviewDTO.getGameId());
+            System.out.println("gameReviewDTOList = " + gameReviewDTOList);
             return new ResponseEntity<>(gameReviewDTOList, HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

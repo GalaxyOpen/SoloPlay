@@ -3,9 +3,13 @@ package com.example.memberboard.Controller;
 import com.example.memberboard.DTO.MemberDTO;
 import com.example.memberboard.Service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,11 +40,29 @@ public class MemberController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
-    @GetMapping("/member/")
-    public String findAll(Model model){
-        List<MemberDTO> memberDTOList = memberService.findAll();
-        model.addAttribute("memberList", memberDTOList);
-        return "/memberPages/memberList";
+    @Transactional
+    @GetMapping
+    public String findAll(@PageableDefault(page=1) Pageable pageable,
+                          @RequestParam(value="type", required=false, defaultValue = "")String type,
+                          @RequestParam(value="q", required = false, defaultValue = "")String q,
+                          Model model){
+        Page<MemberDTO> memberDTOPage = memberService.paging(pageable, type, q);
+        if(memberDTOPage.getTotalElements()==0){
+            model.addAttribute("memberList", null);
+        }else{
+            model.addAttribute("memberList", memberDTOPage);
+        }
+        int blockLimit=5;
+        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+        int endPage = ((startPage + blockLimit - 1) < memberDTOPage.getTotalPages()) ? startPage + blockLimit - 1 : memberDTOPage.getTotalPages();
+
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("type", type);
+        model.addAttribute("q", q);
+
+            return "/memberPages/memberList";
+
     }
     @GetMapping("/member/login")
     public String loginForm(@RequestParam(value="redirectURI", defaultValue = "/member/myPage")String redirectURI,
@@ -87,8 +109,8 @@ public class MemberController {
     }
     @GetMapping("/member/update/")
     public String updateForm(HttpSession session, Model model){
-        String loginEmail=(String)session.getAttribute("loginEmail");
-        MemberDTO memberDTO = memberService.findByMemberEmail(loginEmail);
+        String loginId=(String)session.getAttribute("loginId");
+        MemberDTO memberDTO = memberService.findByMemberId(loginId);
         model.addAttribute("member", memberDTO);
         return "/memberPages/memberUpdate";
     }
