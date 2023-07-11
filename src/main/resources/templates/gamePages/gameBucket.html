@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Game Bucket</h2>
+
+<div th:if="${bucketList}">
+    <a href="/game">아직 Bucket 에 담긴 게임이 없습니다.</a>
+</div>
+
+<div th:unless="${bucketList}">
+<form action="/game/payment" method="post" id="payment">
+    <a th:href="@{|/game/|${bucket.gameId}|}"></a>
+    <input type="hidden" th:value="${bucket.gameId}" name="gameId">
+</form>
+</div>
+<div>
+    <span id="buyAmount" th:text="${bucket.butAmount}"></span>
+    <span>point</span>
+</div>
+<button type="button"
+        th:onclick="deleteById([[${bucket.id}]])">Bucket 에서 삭제
+</button>
+<div>총계 : $#8361; <span th:text="*{totalPrice}" th:value="*{totalPrice}"></span></div>
+<div>포인트 사용 : <input type="number" min="0" th:max="*{memberPoint}"
+                    id="point_use_value" name="pointUse" onblur="point_use()" value="0">
+    <span th:text="*{'보유포인트 :'+memberPoint+'point'}"></span>
+</div>
+<span id="pointApply"></span>
+<div>결제금액 :  </div>
+</body>
+</html>

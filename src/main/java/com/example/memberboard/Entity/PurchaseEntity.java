@@ -1,5 +1,7 @@
 package com.example.memberboard.Entity;
 
+import com.example.memberboard.DTO.PurchaseDetailDTO;
+import com.example.memberboard.DTO.PurchaseSaveDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,11 +17,11 @@ public class PurchaseEntity extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
     private GameEntity gameEntity;
 
@@ -32,14 +34,13 @@ public class PurchaseEntity extends BaseEntity{
     @Column(length = 20, nullable = false)
     private String status;
 
-//public static PurchaseEntity toPurchaseEntity(PurchaseDTO purchaseDTO){
-//    PurchaseEntity purchaseEntity = new PurchaseEntity();
-//    purchaseEntity.setMemberEntity(purchaseDTO.getMemberEntity);
-//    purchaseEntity.setGameEntity(purchaseDTO.getGameEntity);
-//    purchaseEntity.setBuyAmount(purchaseDTO.getBuyAmount);
-//    purchaseEntity.setPayMethod(purchaseDTO.getPayMethod);
-//    purchaseEntity.setStatus(purchaseDTO.getStatus);
-//    return purchaseEntity;
-//}
-
+public static PurchaseEntity toPurchaseEntity(MemberEntity memberEntity, GameEntity gameEntity){
+    PurchaseEntity purchaseEntity = new PurchaseEntity();
+    purchaseEntity.setMemberEntity(memberEntity);
+    purchaseEntity.setGameEntity(gameEntity);
+    purchaseEntity.setBuyAmount(purchaseEntity.getBuyAmount());
+    purchaseEntity.setPayMethod(purchaseEntity.getPayMethod());
+    purchaseEntity.setStatus(purchaseEntity.getStatus());
+    return purchaseEntity;
+    }
 }
